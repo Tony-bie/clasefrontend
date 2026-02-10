@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<style>
+.Login{
+    text-align: center;
+}
+
+.page{
+    background-color: #F0909C;
+}
+
+.Username{
+    text-align: center;
+}
+
+.Password{
+    text-align: center;
+}
+.button{
+    text-align: center;
+}
+.message{
+    text-align: center;
+}
+</style>
+
+<head>
+    <title> Login </title>
+</head>
+
+<body>
+    <div class="page">
+        <div class="Login">
+            <h1>Login</h1>
+        </div>
+        <div class = "Username">
+            <label for="Name">Username</label>
+            <input type ="text" id="Username",Name="Username">
+        </div>
+        <div class = "Password">
+            <label for="Password">Password</label>
+            <input type ="text" id="Password", Name="Password">
+        </div>
+        <div class="button">
+            <a href="../success.html" id="loginlink">Login</a>
+        </div>
+        <div class="message">
+            <p></p>
+        </div>
+    </div>
+</body>
+
+<script>
+   
+    const loginLink = document.querySelector("#loginlink")
+
+    const p = document.querySelector("p")
+
+    loginLink.addEventListener("click", updateButton);
+
+    function updateButton(event){
+        const Username = document.querySelector("#Username").value
+        const Password = document.querySelector("#Password").value
+
+        if(Username === "" || Password === ""){
+            event.preventDefault();
+            p.textContent= "Login fail"
+            return false
+        }
+        else {
+            return true
+        }
+    }
+</script>
+
