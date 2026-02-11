@@ -2,10 +2,15 @@
 <style>
 .Login{
     text-align: center;
+    justify-content: center;
+    align-items: center;
+    display: flex;
 }
 
 .page{
     background-color: #F0909C;
+    height: 225px;
+    width: 300px;
 }
 
 .Username{
@@ -14,9 +19,19 @@
 
 .Password{
     text-align: center;
+    padding-top: 5%;
 }
 .button{
     text-align: center;
+    background-color: aqua;
+    padding: 2px;
+    width: 100px;
+}
+.box{
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    height: 50px;
 }
 .message{
     text-align: center;
@@ -27,7 +42,7 @@
     <title> Login </title>
 </head>
 
-<body>
+<body style="background-color: #C28287; justify-content: center; align-items: center; display: flex;">
     <div class="page">
         <div class="Login">
             <h1>Login</h1>
@@ -40,8 +55,8 @@
             <label for="Password">Password</label>
             <input type ="text" id="Password", Name="Password">
         </div>
-        <div class="button">
-            <a href="../success.html" id="loginlink">Login</a>
+        <div class="box">
+            <a class="button"href="../success.html" id="loginlink">Login</a>
         </div>
         <div class="message">
             <p></p>
