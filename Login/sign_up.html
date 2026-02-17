@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+    <link rel="stylesheet" href="mystyle.css">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body class="body">
+    <header>
+        <div id="header-placeholder"></div>
+    </header>
+    <div class="page">
+        <div class="Login">
+            <h1>Sign up</h1>
+        </div>
+        <div class = "Username">
+            <label for="Name">Username</label>
+            <input type ="text" id="Username",Name="Username">
+        </div>
+        <div class = "Password">
+            <label for="Password">Password</label>
+            <input type ="text" id="Password", Name="Password">
+        </div>
+        <div class="box">
+            <a class="button"href="Login.html">Sign up</a>
+        </div>
+        <div class="message">
+            <p></p>
+        </div>
+    </div>
+    <footer>
+        <div id="footer-placeholder"></div>
+    </footer>
+</body>
+</html>
+
+<script>
+    fetch('nav.html')
+    .then(response => response.text())
+    .then(data => {
+        document.getElementById('header-placeholder').innerHTML = data;
+    })
+</script>
