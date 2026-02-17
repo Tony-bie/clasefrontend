@@ -1,48 +1,15 @@
 <!DOCTYPE html>
-<style>
-.Login{
-    text-align: center;
-    justify-content: center;
-    align-items: center;
-    display: flex;
-}
-
-.page{
-    background-color: #F0909C;
-    height: 225px;
-    width: 300px;
-}
-
-.Username{
-    text-align: center;
-}
-
-.Password{
-    text-align: center;
-    padding-top: 5%;
-}
-.button{
-    text-align: center;
-    background-color: aqua;
-    padding: 2px;
-    width: 100px;
-}
-.box{
-    justify-content: center;
-    align-items: center;
-    display: flex;
-    height: 50px;
-}
-.message{
-    text-align: center;
-}
-</style>
-
+<html lang="en">
+    <link rel="stylesheet" href="mystyle.css">
 <head>
-    <title> Login </title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
 </head>
-
-<body style="background-color: #C28287; justify-content: center; align-items: center; display: flex;">
+<body class="body">
+    <header>
+        <div id="header-placeholder"></div>
+    </header>
     <div class="page">
         <div class="Login">
             <h1>Login</h1>
@@ -56,13 +23,17 @@
             <input type ="text" id="Password", Name="Password">
         </div>
         <div class="box">
-            <a class="button"href="../success.html" id="loginlink">Login</a>
+            <a class="button"href="success.html" id="loginlink">Login</a>
         </div>
         <div class="message">
             <p></p>
         </div>
     </div>
+    <footer>
+        <div id="footer-placeholder"></div>
+    </footer>
 </body>
+</html>
 
 <script>
    
@@ -82,8 +53,15 @@
             return false
         }
         else {
+            document.cookie = 'Username: '+ encodeURIComponent(Username) + ' password: '+ encodeURIComponent(Password)
+            alert(document.cookie)
             return true
         }
     }
-</script>
 
+    fetch('nav.html')
+    .then(response => response.text())
+    .then(data => {
+        document.getElementById('header-placeholder').innerHTML = data;
+    })
+</script>
