@@ -16,14 +16,14 @@
         </div>
         <div class = "Username">
             <label for="Name">Username</label>
-            <input type ="text" id="Username",Name="Username">
+            <input type ="text" id="Username" name="Username">
         </div>
         <div class = "Password">
             <label for="Password">Password</label>
-            <input type ="text" id="Password", Name="Password">
+            <input type ="text" id="Password" name="Password">
         </div>
         <div class="box">
-            <a class="button"href="success.html" id="loginlink">Login</a>
+            <button class="button" id="loginlink">Login</button>
         </div>
         <div class="message">
             <p></p>
@@ -53,12 +53,26 @@
             return false
         }
         else {
-            document.cookie = 'Username: '+ encodeURIComponent(Username) + ' password: '+ encodeURIComponent(Password)
-            alert(document.cookie)
-            return true
-        }
+            fetch('http://localhost:3000/login',{
+                method: 'POST',
+                headers: {
+                    'Content-Type' : 'application/json',
+                },
+                body: JSON.stringify({
+                    Username: Username,
+                    Password, Password
+                }),
+            }).then(answer => {
+                if (answer.status === 200) {
+                    window.location.href = 'success.html'; 
+                } else {
+                    p.textContent = "Login fail";
+                }
+            })
+            .then(datos => console.log(datos))
+            .catch(error => console.log(error),)
     }
-
+    }
     fetch('nav.html')
     .then(response => response.text())
     .then(data => {
