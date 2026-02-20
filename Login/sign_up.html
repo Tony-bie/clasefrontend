@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-    <link rel="stylesheet" href="mystyle.css">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="mystyle.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
@@ -16,17 +16,14 @@
         </div>
         <div class = "Username">
             <label for="Name">Username</label>
-            <input type ="text" id="Username",Name="Username">
+            <input type ="text" id="Username" name="Username">
         </div>
         <div class = "Password">
             <label for="Password">Password</label>
-            <input type ="text" id="Password", Name="Password">
+            <input type ="text" id="Password" name="Password">
         </div>
         <div class="box">
-            <a class="button"href="Login.html">Sign up</a>
-        </div>
-        <div class="message">
-            <p></p>
+            <button class="button" id="sign_up">Sign up</button>
         </div>
     </div>
     <footer>
@@ -41,4 +38,25 @@
     .then(data => {
         document.getElementById('header-placeholder').innerHTML = data;
     })
+
+    const loginLink = document.querySelector("#sign_up")
+
+
+    loginLink.addEventListener("click", sign_up);
+
+    function sign_up(event){
+        const Username = document.querySelector("#Username").value;
+        const Password = document.querySelector("#Password").value;
+
+        fetch('http://localhost:3000/sign_up', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ Username, Password })
+            })
+            .then(answer => answer.json())
+            .then(data => {
+                if (data.success) window.location.href = "Login.html";
+            })
+            .catch(error => console.log(error));
+        }
 </script>
