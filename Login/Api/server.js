@@ -81,6 +81,13 @@ app.get('/', (req, res) => {
     res.redirect('/Login.html');
 });
 
+app.get("/success", function(req,res){
+    const pokemon = req.body
+
+    if(pokemon)
+        return res.json({success: true})
+})
+
 // Middleware: proteger accesos directos a archivos .html listados en `lista_paginas`
 app.use(function(req, res, next){
     const protectedHtml = lista_paginas.map(p => `/${p}.html`);
