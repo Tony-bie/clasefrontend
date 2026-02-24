@@ -10,9 +10,11 @@
     <header>
         <div id="header-placeholder"></div>
     </header>
-        <div>
+    <div>
         <h1>Login successful</h1>
     </div>
+    <img id="pokemon_image" alt = "pokemon"></img>
+    <div id="pokemon_name"></div>
     <footer>
         <div id="footer-placeholder"></div>
     </footer>
@@ -31,4 +33,26 @@
     .then(data => {
         document.getElementById('header-placeholder').innerHTML = data;
     })
+
+
+    
+    reicive_pokemon()
+
+    async function reicive_pokemon() {
+    const URL = "https://pokeapi.co/api/v2/pokemon/charizard"
+      fetch(URL, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+            })
+            .then(answer => answer.json())
+            .then(data => {
+                let pokemonName  = data.name || "";
+                let pokemonImage = data.sprites?.front_default  || "";
+
+                document.getElementById('pokemon_name').textContent = pokemonName;
+                document.getElementById('pokemon_image').src = pokemonImage;
+            })
+            .catch(error => console.log(error));     
+}
+    
 </script>
