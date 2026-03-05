@@ -81,14 +81,14 @@ app.get('/', (req, res) => {
     res.redirect('/Login.html');
 });
 
-app.get("/success", function(req,res){
-    const pokemon = req.body
 
-    if(pokemon)
+
+app.get("/pokedex", function(req,res){
+    const pokedex = req.body
+
+    if (pokedex)
         return res.json({success: true})
 })
-
-// Middleware: proteger accesos directos a archivos .html listados en `lista_paginas`
 app.use(function(req, res, next){
     const protectedHtml = lista_paginas.map(p => `/${p}.html`);
     if (protectedHtml.includes(req.path) && blocker.isBlocked()){
