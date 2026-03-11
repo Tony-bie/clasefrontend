@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pokedex</title>
-            <link rel="stylesheet" href="../mystyle.css">
+        <link rel="stylesheet" href="../mystyle.css">
 </head>
 <body class="body">  
     <header>
@@ -15,67 +15,42 @@
         <label for="Name">Search by id</label>
             <input type ="number" id="idpokemon" name="pokemon">
         <button onclick="loadGeneration()">Search</button>
-        <button onclick="loadGeneration('gen1')">Gen 1</button>
-        <button onclick="loadGeneration('gen2')">Gen 2</button>
-        <button onclick="loadGeneration('gen3')">Gen 3</button>
+
+        <button onclick="loadGeneration('Deploy')">Deploy all pokemons</button>
+
     </div>
     <div id="pokedex"></div>
 </body>
 </html>
 
 <script>
-async function loadGeneration(gen){
+    async function loadGeneration(action) {
+        const pokedexDiv = document.getElementById('pokedex');
 
-    let start
-    let end
+        if (action === 'Deploy') {
+            const response = await fetch('/api/pokemon');
+            const pokemons = await response.json();
+            pokedexDiv.innerHTML = pokemons.map(p => createPokemonCard(p)).join('');
+        } else {
+            const id = Number(document.querySelector("#idpokemon").value);
+            if (!id) return; 
 
-    if(!gen){
-        const id = Number(document.querySelector("#idpokemon").value)
-        start = id
-        end = id
+            const response = await fetch(`/api/pokemon/${id}`);
+            const pokemon = await response.json();
+            pokedexDiv.innerHTML = createPokemonCard(pokemon);
+        }
     }
 
-    if (gen == 'gen1'){
-        start = 1
-        end = 151
+    function createPokemonCard(pokemon) {
+        return `
+            <div class="pokemon-card">
+                <h3>#${pokemon.id} ${pokemon.name}</h3>
+                <img src="${pokemon.sprite}" alt="${pokemon.name}">
+                <p>Tipo: ${pokemon.type}</p>
+                <p>HP: ${pokemon.stats.hp} | ATK: ${pokemon.stats.attack} | DEF: ${pokemon.stats.defense}</p>
+            </div>
+        `;
     }
-    
-    if(gen === 'gen2'){
-        start = 152
-        end = 251
-    }
-
-    if(gen === 'gen3'){
-        start = 252
-        end = 386
-    }
-
-
-
-    const URL = 'https://pokeapi.co/api/v2/pokemon/'
-
-    let output = ''
-
-    for(let id = start; id <= end; id++){
-
-        const response = await fetch(`${URL}/${id}`)
-        const pokemon = await response.json()
-
-        const types = pokemon.types
-        .map(t => t.type.name)
-        .join(", ");
-
-        output += `
-        <div class="pokemon-card">
-            <p>${id}. ${pokemon.name.toUpperCase()}</p>
-            <img src="${pokemon.sprites.front_default}">
-            <p>Type: ${types}</p>
-        </div>
-        `
-    }
-
-    document.getElementById("pokedex").innerHTML = output
-}
 
     fetch('footer.html')
     .then(response => response.text())

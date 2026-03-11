@@ -5,6 +5,7 @@ const app = express();
 
 app.use(express.json());
 
+const { loadEveryPokemon, getMoves, pokemonDB } = require('../pokemon/download_pokeinfo');
 
 var Blocker = function(){
     this.blocked = true;
@@ -45,6 +46,10 @@ lista_paginas.forEach(page =>
 })
 )
 
+app.get('/', (req, res) => {
+    blocker.enableBlock()
+    res.redirect('/Login.html');
+});
 
 
 app.post('/login', function(req, res){
@@ -76,19 +81,20 @@ app.post('/sign_up', function(req,res){
     return res.status(201).json({ success: true });
 })
 
-app.get('/', (req, res) => {
-    blocker.enableBlock()
-    res.redirect('/Login.html');
+app.get('/api/pokemon', (req, res) => {
+    res.json(Object.values(pokemonDB));
 });
 
+app.get('/api/pokemon/:id', (req,res)=>{
+    const id = parseInt(req.params.id);
+    if (isNaN(id)) return res.status(400).json({ error: 'ID inválido' });
 
-
-app.get("/pokedex", function(req,res){
-    const pokedex = req.body
-
-    if (pokedex)
-        return res.json({success: true})
+    const pokemon = pokemonDB[id];
+    pokemon
+        ? res.json(pokemon)
+        : res.status(404).json({ error: 'Pokémon no encontrado' });
 })
+
 app.use(function(req, res, next){
     const protectedHtml = lista_paginas.map(p => `/${p}.html`);
     if (protectedHtml.includes(req.path) && blocker.isBlocked()){
@@ -102,4 +108,11 @@ app.use(express.static(path.join(__dirname, '..'), {
     index: false    
 }));
 
-app.listen(3000, () => console.log("Server running on port 3000"));
+
+async function init() {
+    await getMoves();
+    await loadEveryPokemon();
+    app.listen(3000, () => console.log("Server running on port 3000"));
+}
+
+init();
