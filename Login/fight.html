@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fight</title>
+    <link rel="stylesheet" href="../mystyle.css">
+</head>
+<body class="body">
+    <header>
+        <div id="header-placeholder"></div>
+    </header>
+    <div class="fight-container">
+        <div class="fight-image ">
+            <select id="select-1" onchange="getPokemon('select-1', 'pokemon-fight-1')"></select>
+            <div id="pokemon-fight-1"></div>
+        </div>
+
+        <div class="boxfight">
+            <button class="button" id="fight">Battle begin</button>
+            
+        </div>
+
+        <div class="fight-image">
+            <select id="select-2" onchange="getPokemon('select-2', 'pokemon-fight-2')"></select>
+            <div id="pokemon-fight-2"></div>
+        </div>
+    </div>
+        <div id="battle-log"></div>
+    <footer>
+        <div id="footer-placeholder"></div>
+    </footer>
+</body>
+</html>
+
+<script>
+    fetch('footer.html')
+    .then(response => response.text())
+    .then(data => {
+        document.getElementById('footer-placeholder').innerHTML = data;
+    })
+
+    fetch('nav-post-login.html')
+    .then(response => response.text())
+    .then(data => {
+        document.getElementById('header-placeholder').innerHTML = data;
+    })
+
+    async function selectPokemon(selectId) {
+        const select = document.getElementById(selectId);
+        const response = await fetch('/api/pokemon');
+        const pokemons = await response.json();
+
+        select.innerHTML = `<option value="0" disabled selected>Selecciona un pokemon</option>`;
+        select.innerHTML += pokemons.map(p => createOption(p)).join('');
+    }
+
+    function createOption(pokemon) {
+        return `<option value="${pokemon.id}">${pokemon.name}</option>`;
+    }
+
+    async function getPokemon(selectId, cardId) {
+        const id = document.getElementById(selectId).value;
+        if (id === '0') return;
+
+        const response = await fetch(`/api/pokemon/${id}`);
+        const pokemon = await response.json();
+        document.getElementById(cardId).innerHTML = createPokemonCard(pokemon);
+    }
+
+
+     function createPokemonCard(pokemon) {
+        return `
+            <div class="pokemon-card">
+                <h3>#${pokemon.id} ${pokemon.name}</h3>
+                <img src="${pokemon.sprite}" alt="${pokemon.name}">
+                <p>Tipo: ${pokemon.type}</p>
+                <p>HP: ${pokemon.stats.hp} | ATK: ${pokemon.stats.attack} | DEF: ${pokemon.stats.defense}</p>
+            </div>
+        `;
+    }
+
+    selectPokemon('select-1');
+    selectPokemon('select-2');
+
+    const loginLink = document.querySelector("#fight")
+
+    loginLink.addEventListener("click", pokemonfight);
+
+    function sleep(ms) {
+        return new Promise(res => setTimeout(res, ms));
+    }
+
+    async function pokemonfight(){
+
+        const id1 = document.getElementById('select-1').value;
+        const id2 = document.getElementById('select-2').value;
+
+        if (id1 === '0' || id2 === '0') {
+            alert('Selecciona ambos pokémon antes de pelear');
+            return;
+        }
+
+        const response_1 = await fetch(`/api/pokemon/${id1}`);
+        let pokemon_1 = await response_1.json();
+
+        const response_2 = await fetch(`/api/pokemon/${id2}`);
+        let pokemon_2 = await response_2.json();
+        
+        const log = document.getElementById('battle-log'); 
+        log.innerHTML = '';
+
+        while (pokemon_1.stats.hp > 0 && pokemon_2.stats.hp > 0){
+            calculfight(pokemon_1,pokemon_2, log)
+            await sleep(3000);                            
+            if (pokemon_2.stats.hp <= 0) break;
+            calculfight(pokemon_2, pokemon_1, log)
+            await sleep(3000); 
+        }
+
+        const winner = pokemon_1.stats.hp > 0 ? pokemon_1 : pokemon_2;
+
+        await sleep(3000)
+
+        alert(`${winner.name} wins!`);
+        location.reload();
+    }
+
+    function calculfight(attacker, attacked, log){
+
+        const moves = attacker.moves.filter(m => m && m.power > 0);
+        if (moves.length === 0) return;
+
+        const move = moves[Math.floor(Math.random() * moves.length)];
+
+        attacked.stats.hp -= move.power;
+
+        log.innerHTML += `<p>${attacker.name} used ${move.name} and did ${move.power} damage. ${attacked.name} has ${Math.max(0, attacked.stats.hp)} HP</p>`;
+
+    }
+
+</script>
