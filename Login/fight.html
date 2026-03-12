@@ -27,6 +27,7 @@
         </div>
     </div>
         <div id="battle-log"></div>
+        <div id="winner-display"></div>
     <footer>
         <div id="footer-placeholder"></div>
     </footer>
@@ -107,8 +108,10 @@
         const response_2 = await fetch(`/api/pokemon/${id2}`);
         let pokemon_2 = await response_2.json();
         
-        const log = document.getElementById('battle-log'); 
+        const log = document.getElementById('battle-log');
+        const winner_div = document.getElementById('winner-display');
         log.innerHTML = '';
+        winner_div.innerHTML = '';
 
         while (pokemon_1.stats.hp > 0 && pokemon_2.stats.hp > 0){
             calculfight(pokemon_1,pokemon_2, log)
@@ -120,10 +123,15 @@
 
         const winner = pokemon_1.stats.hp > 0 ? pokemon_1 : pokemon_2;
 
-        await sleep(3000)
+        await sleep(500)
 
-        alert(`${winner.name} wins!`);
-        location.reload();
+        winner_div.innerHTML = `
+            <div class="winner-card">
+                <h2> Winner!</h2>
+                <img src="${winner.sprite}" alt="${winner.name}">
+                <h3>${winner.name}</h3>
+            </div>
+        `;
     }
 
     function calculfight(attacker, attacked, log){
@@ -133,9 +141,17 @@
 
         const move = moves[Math.floor(Math.random() * moves.length)];
 
-        attacked.stats.hp -= move.power;
+        const damage_deal = Math.floor(
+                0.01 *
+                (Math.floor(Math.random() * 1.5) + 1) *  
+                (Math.floor(Math.random() * 4) + 1) *      
+                (Math.floor(Math.random() * 16) + 85) *     
+                (((0.2 * 10 + 1) * move.power * attacker.stats.attack) / (25 * attacked.stats.defense))
+                + 2
+            );        
+        attacked.stats.hp -= damage_deal;
 
-        log.innerHTML += `<p>${attacker.name} used ${move.name} and did ${move.power} damage. ${attacked.name} has ${Math.max(0, attacked.stats.hp)} HP</p>`;
+        log.innerHTML += `<p>${attacker.name} used ${move.name} and did ${damage_deal} damage. ${attacked.name} has ${Math.max(0, attacked.stats.hp)} HP</p>`;
 
     }
 
