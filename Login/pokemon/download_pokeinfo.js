@@ -56,7 +56,8 @@ async function getMoves() {
             type: m.type.name,
             accuracy: m.accuracy ?? 100,
             pp: m.pp,
-            damage_class: m.damage_class.name
+            damage_class: m.damage_class.name,
+            name: m.name
         }
     })
 }
